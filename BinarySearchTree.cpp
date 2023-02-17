@@ -109,18 +109,31 @@ public:
 };
 
 int main() {
-	int u=6,k=0;
 	BST bst;
-	while(k<u){
-		cout<<"enter ";
-		int x;cin>>x;
-		bst.insert(x);
-		k++;
-	}k=0;
-	bst.InOrder(bst.root);cout<<endl;
-	bst.preOrder(bst.root);cout<<endl;
-	bst.postOrder(bst.root);cout<<endl;
-	bst.search(4);
-    	bst.MaxMin(bst.root);
+	while(true){
+	    cout<<"enter\n1)to add\n2)inorder\n3)preordder\n4)postorder\n5)min max\n6)search\n7)swap\n";
+	    int n;cin>>n;
+	    if(n==1){
+	        cout<<"entertotal elements ";
+		    int x;cin>>x;
+		    for(int i=0;i<x;i++){
+		        cout<<"enter element ";
+		        int j;cin>>j;
+		        bst.insert(j);   
+		    }
+	    }
+	    else if(n==2){bst.InOrder(bst.root);cout<<endl;}
+	    else if(n==3){	bst.preOrder(bst.root);cout<<endl;}
+	    else if(n==4){	bst.postOrder(bst.root);cout<<endl;}
+	    else if(n==5){bst.MaxMin(bst.root);}
+        else if(n==6){
+            cout<<"enter number ";
+            int x;cin>>x;
+            	bst.search(4);
+        }
+        else{
+            
+        }
+	}
 	return 0;
 }
