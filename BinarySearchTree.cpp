@@ -123,17 +123,17 @@ int main() {
 		    }
 	    }
 	    else if(n==2){bst.InOrder(bst.root);cout<<endl;}
-	    else if(n==3){	bst.preOrder(bst.root);cout<<endl;}
-	    else if(n==4){	bst.postOrder(bst.root);cout<<endl;}
+	    else if(n==3){bst.preOrder(bst.root);cout<<endl;}
+	    else if(n==4){bst.postOrder(bst.root);cout<<endl;}
 	    else if(n==5){bst.MaxMin(bst.root);}
         else if(n==6){
             cout<<"enter number ";
             int x;cin>>x;
-            	bst.search(4);
+            bst.search(x);
         }
         else{
             
         }
-	}
-	return 0;
+    }
+    return 0;
 }
