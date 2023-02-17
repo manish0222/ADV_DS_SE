@@ -62,6 +62,30 @@ public:
 		preOrder(curr->left);
 		preOrder(curr->right);
 	}
+	
+	void postOrder(node* root){
+		node* curr=root;
+		if(curr==NULL) return;
+		postOrder(curr->left);
+		postOrder(curr->right);
+		cout<<curr->no<<" ";
+	}
+	
+	void MaxMin(node* root){
+	    node* l=root;
+	    int mn=root->no;
+	    int mx=mn;
+	    while(l->left != NULL){
+	        l=l->left;
+	    }
+	    mn=l->no;;
+	    l=root;
+	    while(l->right !=NULL){
+	        l=l->right;
+	    }
+	    mx=l->no;
+	    cout<<"max is "<<mx<<" and min is "<<mn<<"\n";
+	}
 	void search(int x){
         bool found=true;
         node* curr=root;
@@ -95,6 +119,8 @@ int main() {
 	}k=0;
 	bst.InOrder(bst.root);cout<<endl;
 	bst.preOrder(bst.root);cout<<endl;
+	bst.postOrder(bst.root);cout<<endl;
 	bst.search(4);
+    	bst.MaxMin(bst.root);
 	return 0;
 }
