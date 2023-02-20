@@ -1,3 +1,4 @@
+
 //============================================================================
 // Name        : BinarySearchTree.cpp
 // Author      : manish
@@ -62,15 +63,15 @@ public:
 		preOrder(curr->left);
 		preOrder(curr->right);
 	}
-	
+
 	void postOrder(node* root){
 		node* curr=root;
-		if(curr==NULL) return;
+		if(curr==NULL)return;
 		postOrder(curr->left);
 		postOrder(curr->right);
 		cout<<curr->no<<" ";
 	}
-	
+
 	void MaxMin(node* root){
 	    node* l=root;
 	    int mn=root->no;
@@ -86,6 +87,7 @@ public:
 	    mx=l->no;
 	    cout<<"max is "<<mx<<" and min is "<<mn<<"\n";
 	}
+
 	void search(int x){
         bool found=true;
         node* curr=root;
@@ -106,20 +108,40 @@ public:
         if(found){cout<<"Found\n";}
         else cout<<"Not Found\n";
 	}
+
+	void swapTree(node* &root){
+		if(root==NULL){return;}
+		swap(root->left,root->right);
+		swapTree(root->left);
+		swapTree(root->right);
+	}
+
+	int longestPath(node* root){
+		if(root==NULL){
+			return 0;
+		}
+		int l=longestPath(root->left);
+		int r=longestPath(root->right);
+		int lp=max(r,l);
+		lp++;
+		return lp;
+	}
 };
 
 int main() {
 	BST bst;
 	while(true){
-	    cout<<"enter\n1)to add\n2)inorder\n3)preordder\n4)postorder\n5)min max\n6)search\n7)swap\n";
+	    cout<<"enter\n1)to add\n2)inorder\n3)preorder\n"
+	    		"4)postorder\n5)min max\n"
+	    		"6)search\n7)swap\n8)longestPath\n";
 	    int n;cin>>n;
 	    if(n==1){
-	        cout<<"entertotal elements ";
+	        cout<<"enter total elements ";
 		    int x;cin>>x;
 		    for(int i=0;i<x;i++){
 		        cout<<"enter element ";
 		        int j;cin>>j;
-		        bst.insert(j);   
+		        bst.insert(j);
 		    }
 	    }
 	    else if(n==2){bst.InOrder(bst.root);cout<<endl;}
@@ -131,8 +153,13 @@ int main() {
             int x;cin>>x;
             bst.search(x);
         }
+        else if(n==7){
+        	bst.swapTree(bst.root);
+        }
         else{
-            
+        	int k=bst.longestPath(bst.root);
+        	cout<<"longest path is "<<k<<endl;
+
         }
     }
     return 0;
