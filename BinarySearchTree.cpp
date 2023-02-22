@@ -88,7 +88,7 @@ public:
 	    cout<<"max is "<<mx<<" and min is "<<mn<<"\n";
 	}
 
-	void search(int x){
+	node* search(int x){
         bool found=true;
         node* curr=root;
         while(curr->no != x){
@@ -105,8 +105,8 @@ public:
                 break;
             }
         }
-        if(found){cout<<"Found\n";}
-        else cout<<"Not Found\n";
+        if(found){return curr;}
+        else return NULL;
 	}
 
 	void swapTree(node* &root){
@@ -126,6 +126,52 @@ public:
 		lp++;
 		return lp;
 	}
+	
+	node* deleteNode(node* root,int key){
+	    if(root==NULL){
+	        return root;
+	    }
+	    if(root->no == key){
+	        //0 child
+	        if(root->left == NULL && root->right ==NULL){
+	            delete root;
+	            return NULL;
+	        }
+	        // 1 child
+	        else if(root->left==NULL && root->right!=NULL){
+	            node* temp=root->right;
+	            delete root;
+	            return temp;
+	        }
+	        else if(root->right==NULL && root->left!=NULL){
+	            node* temp=root->left;
+	            delete root;
+	            return temp;
+	        }
+	        // 2 child
+	        else{
+	            node* curr=root->right;
+	            while(curr->left!=NULL){
+	                curr=curr->left;
+	            }
+	            root->no=curr->no;
+	            root->right=deleteNode(root->right,curr->no);
+	            return root;
+	        }
+	        
+	    }
+	    //left la jaycha
+	    else if(root->no >key){
+	        root->left = deleteNode(root->left,key);
+	        return root;
+	    }
+	    //right la jaycha
+	    else{
+	        root->right = deleteNode(root->right,key);
+	        return root;
+	    }
+	    return root;
+	}
 };
 
 int main() {
@@ -133,7 +179,8 @@ int main() {
 	while(true){
 	    cout<<"enter\n1)to add\n2)inorder\n3)preorder\n"
 	    		"4)postorder\n5)min max\n"
-	    		"6)search\n7)swap\n8)longestPath\n";
+	    		"6)search\n7)swap\n"
+	    		"8)longestPath\n9)delete node\n";
 	    int n;cin>>n;
 	    if(n==1){
 	        cout<<"enter total elements ";
@@ -151,15 +198,21 @@ int main() {
         else if(n==6){
             cout<<"enter number ";
             int x;cin>>x;
-            bst.search(x);
+            node* k=bst.search(x);
+            if(k==NULL){cout<<"Not Found\n";}
+            else cout<<"Found\n";
         }
         else if(n==7){
         	bst.swapTree(bst.root);
         }
-        else{
+        else if(n==8){
         	int k=bst.longestPath(bst.root);
         	cout<<"longest path is "<<k<<endl;
-
+        }
+        else{
+            cout<<"enter no to be deleted ";
+            int x;cin>>x;
+            bst.root = bst.deleteNode(bst.root,x);
         }
     }
     return 0;
