@@ -1,3 +1,4 @@
+
 //============================================================================
 // Name        : BinarySearchTree.cpp
 // Author      : manish
@@ -202,18 +203,18 @@ int main() {
 	    }
 	    else if(n==2){
 	    	cout<<"\n------------------INORDER---------------------\n";
-	    	cout<<"\t\t";bst.InOrder(bst.root);
+	    	cout<<"\t";bst.InOrder(bst.root);
 	    	cout<<endl;
 	    	cout<<"------------------------------------------------\n";
 	    }
 	    else if(n==3){
 	    	cout<<"\n------------------PREORDER---------------------\n";
-	    	cout<<"\t\t";bst.preOrder(bst.root);
+	    	cout<<"\t";bst.preOrder(bst.root);
 	    	cout<<"\n------------------------------------------------\n";
 	    }
 	    else if(n==4){
 	    	cout<<"\n------------------POSTORDER---------------------\n";
-	    	cout<<"\t\t";bst.postOrder(bst.root);
+	    	cout<<"\t";bst.postOrder(bst.root);
 	    	cout<<"\n------------------------------------------------\n";
 	    }
 	    else if(n==5){bst.MaxMin(bst.root);}
@@ -231,13 +232,14 @@ int main() {
 
         	cout<<"\n ------------------LONGEST PATH ---------------------\n";
         	int k=bst.longestPath(bst.root);
-        	cout<<"\t\t";cout<<"longest path is "<<k<<endl;
+        	cout<<"\t";cout<<"longest path is "<<k<<endl;
         	cout<<"------------------------------------------------------\n";
         }
         else{
             cout<<"enter no to be deleted ";
             int x;cin>>x;
             bst.root = bst.deleteNode(bst.root,x);
+            cout<<"deleted the node\n";
         }
     }
     return 0;
