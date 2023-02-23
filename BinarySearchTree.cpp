@@ -1,4 +1,3 @@
-
 //============================================================================
 // Name        : BinarySearchTree.cpp
 // Author      : manish
@@ -85,7 +84,9 @@ public:
 	        l=l->right;
 	    }
 	    mx=l->no;
-	    cout<<"max is "<<mx<<" and min is "<<mn<<"\n";
+	    cout<<"\n------------------------------------------------\n";
+	    cout<<"\t\t";cout<<"max is "<<mx<<" and min is "<<mn<<"\n";
+	    cout<<"-------------------------------------------------\n";
 	}
 
 	node* search(int x){
@@ -126,7 +127,7 @@ public:
 		lp++;
 		return lp;
 	}
-	
+
 	node* deleteNode(node* root,int key){
 	    if(root==NULL){
 	        return root;
@@ -158,7 +159,7 @@ public:
 	            root->right=deleteNode(root->right,curr->no);
 	            return root;
 	        }
-	        
+
 	    }
 	    //left la jaycha
 	    else if(root->no >key){
@@ -170,12 +171,20 @@ public:
 	        root->right = deleteNode(root->right,key);
 	        return root;
 	    }
+	    cout<<"\n------------------------------\n\t deleted node\n";
 	    return root;
 	}
 };
 
 int main() {
 	BST bst;
+		cout<<"enter total elements ";
+		int x;cin>>x;
+		for(int i=0;i<x;i++){
+			cout<<"enter element ";
+			int j;cin>>j;
+			bst.insert(j);
+		}
 	while(true){
 	    cout<<"enter\n1)to add\n2)inorder\n3)preorder\n"
 	    		"4)postorder\n5)min max\n"
@@ -191,9 +200,22 @@ int main() {
 		        bst.insert(j);
 		    }
 	    }
-	    else if(n==2){bst.InOrder(bst.root);cout<<endl;}
-	    else if(n==3){bst.preOrder(bst.root);cout<<endl;}
-	    else if(n==4){bst.postOrder(bst.root);cout<<endl;}
+	    else if(n==2){
+	    	cout<<"\n------------------INORDER---------------------\n";
+	    	cout<<"\t\t";bst.InOrder(bst.root);
+	    	cout<<endl;
+	    	cout<<"------------------------------------------------\n";
+	    }
+	    else if(n==3){
+	    	cout<<"\n------------------PREORDER---------------------\n";
+	    	cout<<"\t\t";bst.preOrder(bst.root);
+	    	cout<<"\n------------------------------------------------\n";
+	    }
+	    else if(n==4){
+	    	cout<<"\n------------------POSTORDER---------------------\n";
+	    	cout<<"\t\t";bst.postOrder(bst.root);
+	    	cout<<"\n------------------------------------------------\n";
+	    }
 	    else if(n==5){bst.MaxMin(bst.root);}
         else if(n==6){
             cout<<"enter number ";
@@ -206,8 +228,11 @@ int main() {
         	bst.swapTree(bst.root);
         }
         else if(n==8){
+
+        	cout<<"\n ------------------LONGEST PATH ---------------------\n";
         	int k=bst.longestPath(bst.root);
-        	cout<<"longest path is "<<k<<endl;
+        	cout<<"\t\t";cout<<"longest path is "<<k<<endl;
+        	cout<<"------------------------------------------------------\n";
         }
         else{
             cout<<"enter no to be deleted ";
