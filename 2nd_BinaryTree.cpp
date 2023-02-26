@@ -49,6 +49,29 @@ public:
       cout<<root->data<<" ";
   }
   
+  void insertLevelWise(node* &root){
+      queue<node*> q;
+      cout<<"enter data for root ";
+      int d;cin>>d;
+      root=new node(d);
+      q.push(root);
+      while(!q.empty()){
+          node*temp=q.front();
+          q.pop();
+          cout<<"enter left of "<<temp->data;
+          int ld;cin>>ld;
+          if(ld!=-1){
+              temp->left=new node(ld);
+              q.push(temp->left);
+          }
+          cout<<"enter right of "<<temp->data;
+          int rd;cin>>rd;
+          if(ld!=-1){
+              temp->right=new node(rd);
+              q.push(temp->right);
+          }
+      }
+  }
   void levelTrav(node* root){
       queue<node*> q;
       q.push(root);
@@ -72,7 +95,8 @@ public:
 };
 int main() {
     BinaryTree bt;
-    bt.root=bt.insert(bt.root);
+    bt.insertLevelWise(bt.root);
+    // bt.root=bt.insert(bt.root);
     cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
     cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
     cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
