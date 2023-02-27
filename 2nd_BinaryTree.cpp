@@ -1,6 +1,7 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
 #include <queue>
+#include <algorithm>
 using namespace std;
 class node{
     node*left,*right;
@@ -10,11 +11,16 @@ public:
         this->data=data;
         left=right=NULL;
     }
+    
     friend class BinaryTree;
 };
 class BinaryTree{
 public:
   node* root=NULL;
+    // BinaryTree opearator=(BinaryTree &c){
+    //     BinaryTree b;
+
+    // }
   node* insert(node* root){
       cout<<"enter data ";
       int x;cin>>x;
@@ -49,6 +55,16 @@ public:
       cout<<root->data<<" ";
   }
   
+  int Height(node* root){
+      if(root == NULL){
+          return 0;
+      }
+      int lval=Height(root->left);
+      int rval=Height(root->right);
+      int k=max(lval,rval)+1;
+      return k;
+  }
+  
   void insertLevelWise(node* &root){
       queue<node*> q;
       cout<<"enter data for root ";
@@ -58,19 +74,42 @@ public:
       while(!q.empty()){
           node*temp=q.front();
           q.pop();
-          cout<<"enter left of "<<temp->data;
+          cout<<"enter left of "<<temp->data<<" ";
           int ld;cin>>ld;
           if(ld!=-1){
               temp->left=new node(ld);
               q.push(temp->left);
           }
-          cout<<"enter right of "<<temp->data;
+          cout<<"enter right of "<<temp->data<<" ";
           int rd;cin>>rd;
-          if(ld!=-1){
+          if(rd!=-1){
               temp->right=new node(rd);
               q.push(temp->right);
           }
       }
+  }
+  int leafCount(node* root){
+      if(!root->left && !root->right){
+          return 1;
+      }
+      int j=0,k=0;
+      if(root->left){k=leafCount(root->left);}
+      if(root->right){j=leafCount(root->right);}
+      return (k+j);
+  }
+  
+  int intNode(node* root){
+      int k=intNode(root->left);
+      int j=intNode(root->right);
+      if(root->left || root->right){
+          return 1;
+      }
+  }
+  void swapBT(node* &root){
+      if(root==NULL)return ;
+      swap(root->left,root->right);
+      swapBT(root->left);
+      swapBT(root->right);
   }
   void levelTrav(node* root){
       queue<node*> q;
@@ -101,5 +140,14 @@ int main() {
     cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
     cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
     bt.levelTrav(bt.root);
+    cout<<"height "<<bt.Height(bt.root);cout<<"\n";
+    bt.swapBT(bt.root);
+    cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
+        cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
+    cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
+     BinaryTree test;
+     test=bt;
+    cout<<"inorder ";test.inorder(test.root);cout<<"\n";
+    cout<<"leafnode "<<bt.leafCount(bt.root);
     return 0;
 }
