@@ -88,6 +88,14 @@ public:
           }
       }
   }
+  int inCount(node* root){
+      if( root==NULL || (!(root->left) && !(root->right) )){
+          return 0;
+      }
+      return 1+inCount(root->left)+inCount(root->right);
+      //T.C = O(n)
+  }
+  
   int leafCount(node* root){
       if(!root->left && !root->right){
           return 1;
@@ -105,11 +113,20 @@ public:
           return 1;
       }
   }
+  
   void swapBT(node* &root){
       if(root==NULL)return ;
       swap(root->left,root->right);
       swapBT(root->left);
       swapBT(root->right);
+  }
+  
+  node* deleteNode(node* root){
+      if(root==NULL){
+          return NULL;
+      }
+      deleteNode(root->left);
+      deleteNode(root->right);
   }
   void levelTrav(node* root){
       queue<node*> q;
@@ -136,18 +153,51 @@ int main() {
     BinaryTree bt;
     bt.insertLevelWise(bt.root);
     // bt.root=bt.insert(bt.root);
-    cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
-    cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
-    cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
-    bt.levelTrav(bt.root);
-    cout<<"height "<<bt.Height(bt.root);cout<<"\n";
-    bt.swapBT(bt.root);
-    cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
-        cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
-    cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
-     BinaryTree test;
-     test=bt;
-    cout<<"inorder ";test.inorder(test.root);cout<<"\n";
-    cout<<"leafnode "<<bt.leafCount(bt.root);
+    while(true){
+        cout<<"enter\n0)enter data\n1)display\n2)swap tree\n3)find height\n"
+        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\nchoice ";
+        int n;cin>>n;
+        if(n==0){
+                bt.insertLevelWise(bt.root);
+        }
+        else if(n==1){
+            cout<<"\n-----------------------------------------\n";
+            cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
+            cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
+            cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
+            cout<<"-----------------------------------------\n";
+        }
+        else if(n==2){
+            bt.swapBT(bt.root);
+            cout<<"---Swapped----\n";
+        }
+        else if(n==3){
+            cout<<"height "<<bt.Height(bt.root);cout<<"\n";
+        }
+        else if(n==4){
+            
+        }
+        else if(n==5){
+            cout<<"leafnode ";
+            if(!bt.root){ cout<<"empty";cout<<"\n";}
+            else{cout<<(bt.leafCount(bt.root));cout<<"\n";}
+            cout<<"internalnode "<<bt.inCount(bt.root);cout<<"\n";
+        }
+        else if(n==6){
+            bt.root=bt.deleteNode(bt.root);
+        }else if(n==7){
+            cout<<"_________Ended_________\n";
+        }
+    }
+    
+    //bt.levelTrav(bt.root);
+
+    // cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
+    //     cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
+    // cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
+    //  BinaryTree test;
+    //  test=bt;
+    // cout<<"inorder ";test.inorder(test.root);cout<<"\n";
+    
     return 0;
 }
