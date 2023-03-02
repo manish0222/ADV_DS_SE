@@ -3,6 +3,7 @@
 #include <iostream>
 #include <queue>
 #include <stack>
+// #include <pair>
 #include <algorithm>
 using namespace std;
 class node{
@@ -195,6 +196,35 @@ public:
           }
       }
   }
+  
+  pair<bool,int> isSumTree(node* root){
+      //base cond
+      if(root==NULL){
+          pair<bool,int> p= make_pair(true,0);
+          return p;
+      }
+      if(root->left==NULL && root->right==NULL){
+          pair<bool,int> p= make_pair(true,root->data);
+          return p;
+      }
+      
+      pair<bool,int> ls = isSumTree(root->left);
+      pair<bool,int> rs = isSumTree(root->right);
+      
+      bool left=ls.first;
+      bool right=rs.first;
+      bool check = (root->data == ls.second + rs.second);
+      pair<bool,int> ans;
+      if(left && right && check){
+          ans.first=true;
+          ans.second = 2*root->data;
+          //ans.second = root->data + ls+ rs;
+      }
+      else{
+          ans.first=false;
+      }
+      return ans;
+  }
 };
 int main() {
     BinaryTree bt;
@@ -202,7 +232,7 @@ int main() {
      bt.root=bt.insert(bt.root);
     while(true){
         cout<<"enter\n0)enter data\n1)display\n2)swap tree\n3)find height\n" ;
-        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\nchoice ";
+        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\n8)sumcheck\nchoice ";
         int n;cin>>n;
         if(n==0){
 //                bt.insertLevelWise(bt.root);
@@ -245,6 +275,10 @@ int main() {
         }else if(n==7){
             cout<<"_________Ended_________\n";
         }
+        else if(n==8){
+            if(bt.isSumTree(bt.root).first){cout<<"is sum tree\n";}
+            else cout<<"is not a sum tree\n";
+        }
     }
 
     //bt.levelTrav(bt.root);  to display all data in that level
@@ -255,5 +289,6 @@ int main() {
 
     return 0;
 }
+
 
 
