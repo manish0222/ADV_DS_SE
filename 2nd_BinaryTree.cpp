@@ -166,13 +166,14 @@ public:
       swapBT(root->right);
   }
 
-  node* deleteNode(node* root){
+  void deleteNode(node* &root){
       if(root==NULL){
-          return NULL;
+          return;
       }
       deleteNode(root->left);
       deleteNode(root->right);
       delete (root);
+      root=NULL;
   }
   void levelTrav(node* root){
       queue<node*> q;
@@ -197,14 +198,15 @@ public:
 };
 int main() {
     BinaryTree bt;
-    bt.insertLevelWise(bt.root);
-    // bt.root=bt.insert(bt.root);
+//    bt.insertLevelWise(bt.root);
+     bt.root=bt.insert(bt.root);
     while(true){
         cout<<"enter\n0)enter data\n1)display\n2)swap tree\n3)find height\n" ;
-        //"4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\nchoice ";
+        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\nchoice ";
         int n;cin>>n;
         if(n==0){
-                bt.insertLevelWise(bt.root);
+//                bt.insertLevelWise(bt.root);
+            bt.root=bt.insert(bt.root);
         }
         else if(n==1){
             cout<<"\n-----------------------------------------\n";
@@ -226,9 +228,9 @@ int main() {
             cout<<"-----------------------------------------\n";
 
         }
-//        else if(n==4){
-//
-//        }
+        else if(n==4){
+
+        }
         else if(n==5){
             cout<<"\n-----------------------------------------\n";
             cout<<"leafnode ";
@@ -237,18 +239,16 @@ int main() {
             cout<<"internalnode "<<bt.inCount(bt.root);cout<<"\n";
             cout<<"-----------------------------------------\n";
         }
-//        else if(n==6){
-//            bt.root=bt.deleteNode(bt.root);
-//        }else if(n==7){
-//            cout<<"_________Ended_________\n";
-//        }
+        else if(n==6){
+            bt.deleteNode(bt.root);
+            cout<<"\t-----DELETED--------\n";
+        }else if(n==7){
+            cout<<"_________Ended_________\n";
+        }
     }
 
     //bt.levelTrav(bt.root);  to display all data in that level
 
-    // cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
-    //     cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
-    // cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
     //  BinaryTree test;
     //  test=bt;
     // cout<<"inorder ";test.inorder(test.root);cout<<"\n";
