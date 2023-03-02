@@ -1,6 +1,7 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <algorithm>
 using namespace std;
 class node{
@@ -33,6 +34,29 @@ public:
       cout<<"enter right data of "<<x<<" ";
       root->right=insert(root->right);
       return root;
+  }
+  
+  void inorderNonRecur(node* root){
+      stack <node*> s;
+      node* t=root;
+      bool isEmpty=false;
+      while(true){
+          while(t!=NULL){
+              s.push(t);
+              t=t->left;
+              cout<<t->data<<" ";
+          }
+          if(s.empty()){
+              isEmpty=true;;
+              return;
+          }
+          node* u=s.top();
+          s.pop();
+          cout<<u->data<<" ";
+          t=t->right;
+          if(isEmpty){return;}
+      }
+      
   }
   void inorder(node* root){
       if(root==NULL){return;}
@@ -127,6 +151,7 @@ public:
       }
       deleteNode(root->left);
       deleteNode(root->right);
+      delete (root);
   }
   void levelTrav(node* root){
       queue<node*> q;
@@ -163,6 +188,7 @@ int main() {
         else if(n==1){
             cout<<"\n-----------------------------------------\n";
             cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
+            cout<<"inorder non-recursively ";bt.inorderNonRecur(bt.root);cout<<"\n";
             cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
             cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
             cout<<"-----------------------------------------\n";
