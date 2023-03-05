@@ -1,5 +1,3 @@
-
-// Online C++ compiler to run C++ program online
 #include <iostream>
 #include <queue>
 #include <stack>
@@ -70,15 +68,43 @@ public:
 	  }
   }
   void postOrderNonrecur(node* root){
-	  if(root==NULL){
-		  cout<<"empty ";
-		  return;
-	  }
-	  stack<node*> s;
-	  s.push(root);
-	  while(!s.empty()){
-
-	  }
+	  vector<int> v;
+    // Check for empty tree
+    if (root == NULL){cout<<" ";}
+    stack<node*> s;
+    s.push(root);
+    node* prev = NULL;
+    while (!s.empty()) {
+        auto current = s.top();
+        if (prev == NULL || prev->left == current
+            || prev->right == current) {
+            if (current->left)
+                s.push(current->left);
+            else if (current->right)
+                s.push(current->right);
+            else {
+                s.pop();
+                v.push_back(current->data);
+            }
+        }
+ 
+        else if (current->left == prev) {
+            if (current->right)
+                s.push(current->right);
+            else {
+                s.pop();
+                v.push_back(current->data);
+            }
+        }
+        else if (current->right == prev) {
+            s.pop();
+            v.push_back(current->data);
+        }
+        prev = current;
+    }
+    for(auto i:v){
+        cout<<i<<" ";
+    }
   }
   void inorder(node* root){
       if(root==NULL){return;}
@@ -231,8 +257,8 @@ int main() {
 //    bt.insertLevelWise(bt.root);
      bt.root=bt.insert(bt.root);
     while(true){
-        cout<<"enter\n0)enter data\n1)display\n2)swap tree\n3)find height\n" ;
-        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)end\n8)sumcheck\nchoice ";
+        cout<<"enter\n0)enter data\n1)display\n2)swap tree\n3)find height\n"
+        "4)copy tree\n5)count all nodes\n6)delete nodes\n7)sumcheck\n8)end\nchoice ";
         int n;cin>>n;
         if(n==0){
 //                bt.insertLevelWise(bt.root);
@@ -243,9 +269,9 @@ int main() {
             cout<<"inorder ";bt.inorder(bt.root);cout<<"\n";
             cout<<"inorder non-recursively ";bt.inorderNonRecur(bt.root);cout<<"\n";
             cout<<"preorder ";bt.preorder(bt.root);cout<<"\n";
-            cout<<"preoreder NonRecur ";bt.preorederNonRecur(bt.root);cout<<"\n";
+            cout<<"preoreder non-recursively ";bt.preorederNonRecur(bt.root);cout<<"\n";
             cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
-            cout<<"postorder ";bt.postorder(bt.root);cout<<"\n";
+            cout<<"postorder recursively ";bt.postOrderNonrecur(bt.root);cout<<"\n";
             cout<<"-----------------------------------------\n";
         }
         else if(n==2){
@@ -273,11 +299,11 @@ int main() {
             bt.deleteNode(bt.root);
             cout<<"\t-----DELETED--------\n";
         }else if(n==7){
-            cout<<"_________Ended_________\n";
-        }
-        else if(n==8){
             if(bt.isSumTree(bt.root).first){cout<<"is sum tree\n";}
             else cout<<"is not a sum tree\n";
+        }
+        else if(n==8){
+                        cout<<"_________Ended_________\n";
         }
     }
 
@@ -289,6 +315,9 @@ int main() {
 
     return 0;
 }
+
+
+
 
 
 
