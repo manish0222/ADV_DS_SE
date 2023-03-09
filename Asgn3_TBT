@@ -1,0 +1,93 @@
+//============================================================================
+// Name        : Asgn3_TBT.cpp
+// Author      : manish
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <vector>
+using namespace std;
+class node{
+	int data;
+	node* left,*right;
+public:
+	node(int data=0){
+		this->data=data;
+		left=right=NULL;
+	}
+	friend class TBT;
+};
+class TBT{
+public:
+	node* root=NULL;
+	void insert(node* &root){
+		cout<<"enter data ";
+		int x;cin>>x;
+		node* par;
+		if(root==NULL){
+			if(x!=-1){root=new node(x);}
+			else{root=NULL;}
+
+		}
+		else{
+			node* temp=root;
+			while(temp!=NULL){
+				par=temp;
+				if(temp->data >x){
+					temp=temp->left;
+					if(!temp){
+						par->left=new node(x);
+						return;
+					}
+				}
+				else if(temp->data < x){
+					temp=temp->right;
+					if(!temp){
+						par->right=new node(x);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	void inOrder(node* root){
+		if(root==NULL){return;}
+		inOrder(root->left);
+		cout<<root->data<<" ";
+		inOrder(root->right);
+	}
+
+//	void formThread(node* root,	vector<node*> &q){
+//		if(root==NULL){return;}
+//		formThread(root->left,	q);
+//		q.push_back(root);
+//		formThread(root->right,q);
+//	}
+//
+//	void getThread(vector<node*> q){
+//		for(int i=1;i<q.size()-1;i++){
+//			node* temp=q[i];
+//			temp->left=q[i-1];
+//			temp->right=q[i+1];
+//		}
+//		node*temp=NULL;
+//		q[0]->left=temp;
+//		q[q.size()-1]=temp;
+//		temp->left=temp;
+//	}
+};
+int main() {
+	TBT bt;
+	for(int i=0;i<4;i++){
+		bt.insert(bt.root);
+	}
+	bt.inOrder(bt.root);
+//	vector<node*> q;
+//	bt.formThread(bt.root,q);
+//	bt.getThread(q);
+//	bt.inOrder(bt.root);
+	return 0;
+}
