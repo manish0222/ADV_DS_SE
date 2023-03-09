@@ -1,3 +1,141 @@
+// Insertion in Threaded Binary Search Tree.
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node
+{
+    public:
+	 Node *left, *right;
+	int info;
+
+	// False if left pointer points to predecessor
+	// in Inorder Traversal
+	bool lthread;
+
+	// False if right pointer points to successor
+	// in Inorder Traversal
+	bool rthread;
+};
+
+// Insert a Node in Binary Threaded Tree
+class TBT{
+public:
+    Node* root=NULL;
+    Node *insert( Node *root, int ikey)
+{
+	// Searching for a Node with given value
+	Node *ptr = root;
+	Node *par = NULL; // Parent of key to be inserted
+	while (ptr != NULL)
+	{
+		// If key already exists, return
+		if (ikey == (ptr->info))
+		{
+			printf("Duplicate Key !\n");
+			return root;
+		}
+
+		par = ptr; // Update parent pointer
+
+		// Moving on left subtree.
+		if (ikey < ptr->info)
+		{
+			if (ptr -> lthread == false)
+				ptr = ptr -> left;
+			else
+				break;
+		}
+
+		// Moving on right subtree.
+		else
+		{
+			if (ptr->rthread == false)
+				ptr = ptr -> right;
+			else
+				break;
+		}
+	}
+
+	// Create a new node
+	Node *tmp = new Node;
+	tmp -> info = ikey;
+	tmp -> lthread = true;
+	tmp -> rthread = true;
+
+	if (par == NULL)
+	{
+		root = tmp;
+		tmp -> left = NULL;
+		tmp -> right = NULL;
+	}
+	else if (ikey < (par -> info))
+	{
+		tmp -> left = par -> left;
+		tmp -> right = par;
+		par -> lthread = false;
+		par -> left = tmp;
+	}
+	else
+	{
+		tmp -> left = par;
+		tmp -> right = par -> right;
+		par -> rthread = false;
+		par -> right = tmp;
+	}
+
+	return root;
+}
+
+    void inorder( Node *root)
+{
+	if (root == NULL)
+		printf("Tree is empty");
+
+	// Reach leftmost node
+	Node *ptr = root;
+	while (ptr -> lthread == false)
+		ptr = ptr -> left;
+
+	// One by one print successors
+	while (ptr != NULL)
+	{
+		printf("%d ",ptr -> info);
+		ptr = inorderSuccessor(ptr);
+	}
+}
+    
+     Node *inorderSuccessor( Node *ptr)
+{
+	// If rthread is set, we can quickly find
+	if (ptr -> rthread == true)
+		return ptr->right;
+
+	// Else return leftmost child of right subtree
+	ptr = ptr -> right;
+	while (ptr -> lthread == false)
+		ptr = ptr -> left;
+	return ptr;
+}
+
+};
+
+int main()
+{
+	TBT bt;
+    for(int i=0;i<5;i++){
+        cout<<"enter value ";
+        int x;cin>>x;
+        bt.root=bt.insert(bt.root,x);
+    }
+
+	bt.inorder(bt.root);
+
+	return 0;
+}
+
+/*
+
+
 //============================================================================
 // Name        : Asgn3_TBT.cpp
 // Author      : manish
@@ -91,3 +229,5 @@ int main() {
 //	bt.inOrder(bt.root);
 	return 0;
 }
+
+*/
