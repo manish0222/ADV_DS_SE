@@ -68,6 +68,7 @@ public:
 	  }
   }
   void postOrderNonrecur(node* root){
+	  if(root==NULL){cout<<"empty node \n";return;}
 	  vector<int> v;
     // Check for empty tree
     if (root == NULL){cout<<" ";}
@@ -87,7 +88,7 @@ public:
                 v.push_back(current->data);
             }
         }
- 
+
         else if (current->left == prev) {
             if (current->right)
                 s.push(current->right);
@@ -222,7 +223,7 @@ public:
           }
       }
   }
-  
+
   pair<bool,int> isSumTree(node* root){
       //base cond
       if(root==NULL){
@@ -233,10 +234,10 @@ public:
           pair<bool,int> p= make_pair(true,root->data);
           return p;
       }
-      
+
       pair<bool,int> ls = isSumTree(root->left);
       pair<bool,int> rs = isSumTree(root->right);
-      
+
       bool left=ls.first;
       bool right=rs.first;
       bool check = (root->data == ls.second + rs.second);
@@ -283,6 +284,7 @@ int main() {
             cout<<"\t height of tree is "<<bt.Height(bt.root);cout<<"\n";
             cout<<"-----------------------------------------\n";
 
+
         }
         else if(n==4){
 
@@ -304,6 +306,7 @@ int main() {
         }
         else if(n==8){
                         cout<<"_________Ended_________\n";
+                        break;
         }
     }
 
@@ -315,6 +318,7 @@ int main() {
 
     return 0;
 }
+
 
 
 
