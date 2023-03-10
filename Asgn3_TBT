@@ -86,8 +86,7 @@ public:
 	return root;
 }
 
-    void inorder( Node *root)
-{
+    void inorder( Node *root){
 	if (root == NULL)
 		printf("Tree is empty");
 
@@ -103,36 +102,204 @@ public:
 		ptr = inorderSuccessor(ptr);
 	}
 }
+    Node* inSucc(Node* ptr){
+        if (ptr->rthread == true)
+            return ptr->right;
+     
+        ptr = ptr->right;
+        while (ptr->lthread == false)
+            ptr = ptr->left;
+     
+        return ptr;
+    }
+    Node* inPred(Node* ptr){
+        if (ptr->lthread == true)
+            return ptr->left;
+     
+        ptr = ptr->left;
+        while (ptr->rthread == false)
+            ptr = ptr->right;
+        return ptr;
+    }
+     Node *inorderSuccessor( Node *ptr){
+    	// If rthread is set, we can quickly find
+    	if (ptr -> rthread == true)
+    		return ptr->right;
     
-     Node *inorderSuccessor( Node *ptr)
-{
-	// If rthread is set, we can quickly find
-	if (ptr -> rthread == true)
-		return ptr->right;
-
-	// Else return leftmost child of right subtree
-	ptr = ptr -> right;
-	while (ptr -> lthread == false)
-		ptr = ptr -> left;
-	return ptr;
+    	// Else return leftmost child of right subtree
+    	ptr = ptr -> right;
+    	while (ptr -> lthread == false)
+    		ptr = ptr -> left;
+    	return ptr;
+    }
+    
+   Node* caseA(Node* root, Node* par,Node* ptr){  
+       // If Node to be deleted is root
+        if (par == NULL){root = NULL;}
+        // If Node to be deleted is left
+        // of its parent
+        else if (ptr == par->left) {
+            par->lthread = true;
+            par->left = ptr->left;
+        }
+        else {
+            par->rthread = true;
+            par->right = ptr->right;
+        }
+        // Free memory and return new root
+        free(ptr);
+        return root;
+    }
+ 
+// Here 'par' is pointer to parent Node and 'ptr' is
+// pointer to current Node.
+     Node* caseB(Node* root, Node* par,Node* ptr){
+        Node* child;
+        // Initialize child Node to be deleted has
+        // left child.
+        if (ptr->lthread == false)
+            child = ptr->left;
+            // Node to be deleted has right child.
+        else
+            child = ptr->right;
+     
+        // Node to be deleted is root Node.
+        if (par == NULL)
+            root = child;
+     
+        // Node is left child of its parent.
+        else if (ptr == par->left)
+            par->left = child;
+        else
+            par->right = child;
+     
+        // Find successor and predecessor
+        Node* s = inSucc(ptr);
+        Node* p = inPred(ptr);
+     
+        // If ptr has left subtree.
+        if (ptr->lthread == false)
+            p->right = s;
+     
+        // If ptr has right subtree.
+        else {
+            if (ptr->rthread == false)
+                s->left = p;
+        }
+     
+        free(ptr);
+        return root;
 }
-
+ 
+// Here 'par' is pointer to parent Node and 'ptr' is
+// pointer to current Node.
+    Node* caseC(Node* root, Node* par,Node* ptr){
+        // Find inorder successor and its parent.
+        Node* parsucc = ptr;
+        Node* succ = ptr->right;
+     
+        // Find leftmost child of successor
+        while (succ->lthread==false) {
+            parsucc = succ;
+            succ = succ->left;
+        }
+     
+        ptr->info = succ->info;
+     
+        if (succ->lthread == true && succ->rthread == true)
+            root = caseA(root, parsucc, succ);
+        else
+            root = caseB(root, parsucc, succ);
+     
+        return root;
+    }
+ 
+// Deletes a key from threaded BST with given root and
+// returns new root of BST.
+    Node* delThreadedBST(Node* root, int dkey){
+        // Initialize parent as NULL and ptrent
+        // Node as root.
+        Node *par = NULL, *ptr = root;
+        // Set true if key is found
+        int found = 0;
+        // Search key in BST : find Node and its
+        // parent.
+        while (ptr != NULL) {
+            if (dkey == ptr->info) {
+                found = 1;
+                break;
+            }
+            par = ptr;
+            if (dkey < ptr->info) {
+                if (ptr->lthread == false)
+                    ptr = ptr->left;
+                else
+                    break;
+            }
+            else {
+                if (ptr->rthread == false)
+                    ptr = ptr->right;
+                else
+                    break;
+            }
+        }
+     
+        if (found == 0)
+            printf("dkey not present in tree\n");
+     
+        // Two Children
+        else if (ptr->lthread == false && ptr->rthread == false)
+            root = caseC(root, par, ptr);
+     
+        // Only Left Child
+        else if (ptr->lthread == false)
+            root = caseB(root, par, ptr);
+     
+        // Only Right Child
+        else if (ptr->rthread == false)
+            root = caseB(root, par, ptr);
+     
+        // No child
+        else
+            root = caseA(root, par, ptr);
+     
+        return root;
+    }
 };
 
 int main()
 {
 	TBT bt;
-    for(int i=0;i<5;i++){
-        cout<<"enter value ";
-        int x;cin>>x;
-        bt.root=bt.insert(bt.root,x);
-    }
-
-	bt.inorder(bt.root);
-
+	while(true){
+	    cout<<"\n1)enter data in tbt \n2)display in order\n3)delete node in threaded tree\nChoice ";
+	    int n;cin>>n;
+	    if(n==1){
+	        cout<<"enter total elements \t";
+	        int k;cin>>k;
+	        for(int i=0;i<k;i++){
+                cout<<"enter value ";
+                int x;cin>>x;
+                bt.root=bt.insert(bt.root,x);
+            }
+	    }
+	    else if(n==2){
+	        cout<<"\n-----------------------------------\n";
+	       	bt.inorder(bt.root);
+	       	cout<<"\n-----------------------------------\n";
+	    }
+	    else if(n==3){
+	        cout<<"enter element to delete \t";
+	        int x;cin>>x;
+	        bt.root = bt.delThreadedBST(bt.root, x);
+	    }
+	    else{
+	        cout<<"Enter valid things\nENDED\t";
+	        break;
+	    }
+	}
+    
 	return 0;
 }
-
 /*
 
 
