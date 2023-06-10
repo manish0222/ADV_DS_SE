@@ -1,0 +1,139 @@
+//============================================================================
+// Name        : asgn_5.cpp
+// Author      : manish
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+class dict{
+	string word,meaning;
+	dict* next;
+public:
+	dict(){
+		word=meaning="";
+		next=NULL;
+	}
+	dict(string word,string meaning){
+		this->word=word;
+		this->meaning=meaning;
+	}
+	friend class Hashtable;
+};
+class Hashtable{
+	dict* arr[10];
+public:
+	Hashtable(){
+		for(int i=0;i<10;i++){
+			arr[i]=NULL;
+		}
+	}
+	int hashIndex(string s){
+		int x=0;
+		for(int i=0;i<s.length();i++){
+			char a=s[i];
+			x+=int(a);
+		}
+		return x%10;
+	}
+	void insert(string word,string meaning){
+		dict* nn=new dict(word,meaning);
+		int x=hashIndex(word);
+		if(arr[x]==NULL){
+			arr[x]=nn;
+		}
+		else{
+			dict* prev=arr[x];
+			dict* temp=(arr[x]->next);
+			while(temp!=NULL){
+				prev=temp;
+				temp=temp->next;
+			}
+			prev->next=nn;
+		}
+	}
+	void show(dict* obj){
+		cout<<" ->["<<obj->word<<":"<<obj->meaning<<"] ";
+	}
+	void display(){
+		cout<<"\n================================\n";
+		for(int i=0;i<10;i++){
+			cout<<"["<<i<<"]";
+			dict* temp=arr[i];
+			while(temp!=NULL){
+				show(temp);
+				temp=temp->next;
+			}
+			cout<<"\n";
+		}
+		cout<<"================================\n";
+	}
+	void search(string w){
+	    int x=hashIndex(w);
+	    dict* temp=arr[x];
+	    while(temp!=NULL && temp->word!=w){
+	        temp=temp->next;
+	    }
+	    if(!temp){cout<<"Nt Found\n";}
+	    else{cout<<"\tFOund ";show(temp);}
+	}
+	void delData(string w){
+	    int x=hashIndex(w);
+	    dict* temp=arr[x],* par=NULL;
+	    if(temp==NULL){cout<<"NOt found\n";return;}
+	    if(temp->word==w){
+	        arr[x]=temp->next;
+	        cout<<"deleted ";show(temp);
+	        delete temp;
+	    }
+	    else{
+	        while(temp!=NULL && temp->word!=w){
+	            cout<<temp->word<<" ";
+	            par=temp;
+	            temp=temp->next;
+	        }
+	        if(temp==NULL){cout<<"NOt found\n";}
+	        else{
+	            par->next=temp->next;
+	            cout<<"deleted ";show(temp);
+	            delete temp;
+	        }
+	    }
+	}
+};
+int main() {
+	Hashtable obj;
+	while(true){
+		cout<<"1)Insert\n2)Display\n3)Search\n4)Delete\nChoice ";
+		int n;cin>>n;
+		if(n==1){
+		    cout<<"enter elements ";int x;cin>>x;
+		    for(int i=0;i<x;i++){
+		        string w,m;
+			cout<<"enter word ";cin>>w;
+			cout<<"Meaning ";cin>>m;
+			obj.insert(w,m);
+		    }
+		}
+		else if(n==2){
+			obj.display();
+		}
+		else if(n==3){
+		    cout<<"Enter word ";
+		    string w;cin>>w;
+		    obj.search(w);
+		    cout<<"\n";
+		}
+		else if(n==4){
+		    cout<<"Enter word ";
+		    string w;cin>>w;
+		    obj.delData(w);
+		}
+		else{
+			break;
+		}
+	}
+	return 0;
+}

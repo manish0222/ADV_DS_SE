@@ -1,0 +1,395 @@
+// Insertion in Threaded Binary Search Tree.
+#include<bits/stdc++.h>
+using namespace std;
+
+class Node
+{
+    public:
+	 Node *left, *right;
+	int info;
+
+	bool lthread;	// True if left pointer points to predecessor 	in Inorder Traversal
+	bool rthread;  	// True if right pointer points to successor
+	Node(){
+		left=right=NULL;
+		lthread=rthread=false;
+	}
+};
+
+// Insert a Node in Binary Threaded Tree
+class TBT{
+public:
+    Node* root=NULL;
+    Node *insert( Node *root, int ikey){
+	Node *ptr = root;								// Searching for a Node with given value
+	Node *par = NULL; 									// Parent of key to be inserted
+	while (ptr != NULL)
+	{
+		if (ikey == (ptr->info))
+		{
+			printf("Duplicate Key !\n");					// If key already exists, return
+			return root;
+		}
+
+		par = ptr;									   // Update parent pointer
+
+
+		if (ikey < ptr->info)
+		{
+			if (ptr -> lthread == true)					  // Moving on left subtree.
+				ptr = ptr -> left;
+			else{break;}
+		}
+
+		// Moving on right subtree.
+		else
+		{
+			if (ptr->rthread == true)
+				ptr = ptr -> right;
+			else
+				break;
+		}
+	}
+
+
+	Node *tmp = new Node;							// Create a new node
+	tmp -> info = ikey;
+//	tmp -> lthread = false;                       	        	// FALSE set in constructor
+//	tmp -> rthread = false;
+
+	if (par == NULL)
+	{
+		root = tmp;
+		tmp -> left = NULL;
+		tmp -> right = NULL;
+	}
+	else if (ikey < (par -> info))
+	{
+		tmp -> left = par -> left;
+		tmp -> right = par;
+		par -> lthread = true;
+		par -> left = tmp;
+	}
+	else
+	{
+		tmp -> left = par;
+		tmp -> right = par -> right;
+		par -> rthread = true;
+		par -> right = tmp;
+	}
+
+	return root;
+}
+
+    void inorder( Node *root){
+	if (root == NULL)
+		printf("Tree is empty");
+
+	Node *ptr = root;
+	while (ptr -> lthread == true)				  			// Reach leftmost node
+		ptr = ptr -> left;
+
+	while (ptr != NULL)
+	{
+		printf("%d ",ptr -> info);						// One by one print successors
+		ptr = inorderSuccessor(ptr);
+	}
+}
+    Node* inSucc(Node* ptr){
+        if (ptr->rthread == false)
+            return ptr->right;
+
+        ptr = ptr->right;
+        while (ptr->lthread == true)
+            ptr = ptr->left;
+
+        return ptr;
+    }
+
+    Node* inPred(Node* ptr){
+        if (ptr->lthread == false)
+            return ptr->left;
+
+        ptr = ptr->left;
+        while (ptr->rthread == true)
+            ptr = ptr->right;
+        return ptr;
+    }
+     Node *inorderSuccessor( Node *ptr){
+    	// If rthread is set, we can quickly find
+    	if (ptr -> rthread == false)
+    		return ptr->right;
+
+    	// Else return leftmost child of right subtree
+    	ptr = ptr -> right;
+    	while (ptr -> lthread == true)
+    		ptr = ptr -> left;
+    	return ptr;
+    }
+
+   Node* caseA(Node* root, Node* par,Node* ptr){
+       // If Node to be deleted is root
+        if (par == NULL){root = NULL;}
+        // If Node to be deleted is left
+        // of its parent
+        else if (ptr == par->left) {
+            par->lthread = false;
+            par->left = ptr->left;
+        }
+        else {
+            par->rthread = false;
+            par->right = ptr->right;
+        }
+        // Free memory and return new root
+        free(ptr);
+        return root;
+    }
+
+// Here 'par' is pointer to parent Node and 'ptr' is
+// pointer to current Node.
+     Node* caseB(Node* root, Node* par,Node* ptr){
+        Node* child;
+        // Initialize child Node to be deleted has
+        // left child.
+        if (ptr->lthread == true)
+            child = ptr->left;
+            // Node to be deleted has right child.
+        else
+            child = ptr->right;
+
+        // Node to be deleted is root Node.
+        if (par == NULL)
+            root = child;
+
+        // Node is left child of its parent.
+        else if (ptr == par->left)
+            par->left = child;
+        else
+            par->right = child;
+
+        // Find successor and predecessor
+        Node* s = inSucc(ptr);
+        Node* p = inPred(ptr);
+
+        // If ptr has left subtree.
+        if (ptr->lthread == true)
+            p->right = s;
+
+        // If ptr has right subtree.
+        else {
+            if (ptr->rthread == true)
+                s->left = p;
+        }
+
+        free(ptr);
+        return root;
+}
+
+// Here 'par' is pointer to parent Node and 'ptr' is
+// pointer to current Node.
+    Node* caseC(Node* root, Node* par,Node* ptr){
+        // Find inorder successor and its parent.
+        Node* parsucc = ptr;
+        Node* succ = ptr->right;
+
+        // Find leftmost child of successor
+        while (succ->lthread==true) {
+            parsucc = succ;
+            succ = succ->left;
+        }
+
+        ptr->info = succ->info;
+
+        if (succ->lthread == false && succ->rthread == false)
+            root = caseA(root, parsucc, succ);
+        else
+            root = caseB(root, parsucc, succ);
+
+        return root;
+    }
+
+// Deletes a key from threaded BST with given root and
+// returns new root of BST.
+    Node* delThreadedBST(Node* root, int dkey){
+        // Initialize parent as NULL and ptrent
+        // Node as root.
+        Node *par = NULL, *ptr = root;
+        // Set true if key is found
+        int found = 0;
+        // Search key in BST : find Node and its
+        // parent.
+        while (ptr != NULL) {
+            if (dkey == ptr->info) {
+                found = 1;
+                break;
+            }
+            par = ptr;
+            if (dkey < ptr->info) {
+                if (ptr->lthread == true)
+                    ptr = ptr->left;
+                else
+                    break;
+            }
+            else {
+                if (ptr->rthread == true)
+                    ptr = ptr->right;
+                else
+                    break;
+            }
+        }
+
+        if (found == 0)
+            printf("dkey not present in tree\n");
+
+        // Two Children
+        else if (ptr->lthread == true && ptr->rthread == true)
+            root = caseC(root, par, ptr);
+
+        // Only Left Child
+        else if (ptr->lthread == true)
+            root = caseB(root, par, ptr);
+
+        // Only Right Child
+        else if (ptr->rthread == true)
+            root = caseB(root, par, ptr);
+
+        // No child
+        else
+            root = caseA(root, par, ptr);
+
+        return root;
+    }
+};
+
+int main()
+{
+	TBT bt;
+	while(true){
+	    cout<<"\n1)enter data in tbt \n2)display in order\n3)delete node in threaded tree\nChoice ";
+	    int n;cin>>n;
+	    if(n==1){
+	        cout<<"enter total elements \t";
+	        int k;cin>>k;
+	        for(int i=0;i<k;i++){
+                cout<<"enter value ";
+                int x;cin>>x;
+                bt.root=bt.insert(bt.root,x);
+            }
+	    }
+	    else if(n==2){
+	        cout<<"\n----------------INORDER-------------------\n  ";
+	       	bt.inorder(bt.root);
+	       	cout<<"\n------------------------------------------\n";
+	    }
+	    else if(n==3){
+	        cout<<"enter element to delete \t";
+	        int x;cin>>x;
+	        bt.root = bt.delThreadedBST(bt.root, x);
+	    }
+	    else{
+	        cout<<"Enter valid things\nENDED\t";
+	        break;
+	    }
+	}
+
+	return 0;
+}
+
+/*
+
+
+//============================================================================
+// Name        : Asgn3_TBT.cpp
+// Author      : manish
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <vector>
+using namespace std;
+class node{
+	int data;
+	node* left,*right;
+public:
+	node(int data=0){
+		this->data=data;
+		left=right=NULL;
+	}
+	friend class TBT;
+};
+class TBT{
+public:
+	node* root=NULL;
+	void insert(node* &root){
+		cout<<"enter data ";
+		int x;cin>>x;
+		node* par;
+		if(root==NULL){
+			if(x!=-1){root=new node(x);}
+			else{root=NULL;}
+
+		}
+		else{
+			node* temp=root;
+			while(temp!=NULL){
+				par=temp;
+				if(temp->data >x){
+					temp=temp->left;
+					if(!temp){
+						par->left=new node(x);
+						return;
+					}
+				}
+				else if(temp->data < x){
+					temp=temp->right;
+					if(!temp){
+						par->right=new node(x);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	void inOrder(node* root){
+		if(root==NULL){return;}
+		inOrder(root->left);
+		cout<<root->data<<" ";
+		inOrder(root->right);
+	}
+
+//	void formThread(node* root,	vector<node*> &q){
+//		if(root==NULL){return;}
+//		formThread(root->left,	q);
+//		q.push_back(root);
+//		formThread(root->right,q);
+//	}
+//
+//	void getThread(vector<node*> q){
+//		for(int i=1;i<q.size()-1;i++){
+//			node* temp=q[i];
+//			temp->left=q[i-1];
+//			temp->right=q[i+1];
+//		}
+//		node*temp=NULL;
+//		q[0]->left=temp;
+//		q[q.size()-1]=temp;
+//		temp->left=temp;
+//	}
+};
+int main() {
+	TBT bt;
+	for(int i=0;i<4;i++){
+		bt.insert(bt.root);
+	}
+	bt.inOrder(bt.root);
+//	vector<node*> q;
+//	bt.formThread(bt.root,q);
+//	bt.getThread(q);
+//	bt.inOrder(bt.root);
+	return 0;
+}
+
+*/
